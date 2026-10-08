@@ -1,0 +1,11 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {normalizeName,numberPrice,candidateFor,exactCandidate,searchArgs,addArgs,cartConfirmed,unitEligible} from "./core.mjs";
+test("unit threshold",()=>{assert.equal(unitEligible(100),true);assert.equal(unitEligible(100.01),false);assert.equal(unitEligible(0),true)});
+test("pack normalization",()=>assert.equal(normalizeName("Amul Milk 500 ml"),normalizeName("Amul Milk 500ml")));
+test("reject unverified selling price",()=>{const c=candidateFor({id:"a",name:"Milk",mrp:120});assert.equal(c.price,null)});
+test("accept structured exact name",()=>{const r={structuredContent:{products:[{id:"a",name:"Amul Milk 500ml",sellingPrice:89}]}};assert.equal(exactCandidate(r,"Amul Milk 500 ml").product.price,89)});
+test("reject ambiguous variants",()=>{const r={structuredContent:{products:[{id:"a",name:"Milk 500ml",price:80},{id:"b",name:"Milk 500ml",price:90}]}};assert.equal(exactCandidate(r,"Milk 500ml").status,"needs_review")});
+test("no guessed tool arguments",()=>{assert.throws(()=>searchArgs({inputSchema:{properties:{foo:{type:"string"}}}},"Milk"));assert.throws(()=>addArgs({inputSchema:{properties:{sku:{type:"string"}}}},"123",2))});
+test("safe mapped tool arguments",()=>{assert.deepEqual(searchArgs({inputSchema:{properties:{query:{type:"string"}},required:["query"]}},"Milk"),{query:"Milk"});assert.deepEqual(addArgs({inputSchema:{properties:{productId:{type:"string"},quantity:{type:"integer"}},required:["productId","quantity"]}},"123",2),{productId:"123",quantity:2})});
+test("conservative confirmation",()=>{assert.equal(cartConfirmed({structuredContent:{success:true}}),true);assert.equal(cartConfirmed({content:[{type:"text",text:"Unknown"}]}),false)});
