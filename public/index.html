@@ -59,7 +59,7 @@
       </div><div class="right-stack">
         <section class="panel rule-panel"><div class="rule-top"><span class="rule-icon">✧</span><span class="rule-pill">ACTIVE RULE</span></div><p class="rule-title">Max unit price</p><p class="rule-amount">₹100<span>.00</span></p><div class="rule-detail"><span class="green-tick">✓</span> ₹100 or below: eligible</div><div class="rule-detail"><span class="red-cross">×</span> Above ₹100: alert & skip</div><p class="rule-foot">Your overall cart total is unlimited. Quantity never changes whether a unit is eligible.</p></section>
         <section class="panel alerts-panel" id="alerts-panel"><div class="right-head"><div><span class="overline">LIVE ALERTS</span><h3>Price alerts</h3></div><span class="alerts-count" id="alerts-count">0</span></div><div class="alerts-list" id="alerts-list"><p class="none-copy">No products skipped so far.</p></div></section>
-        <section class="panel checkout-panel" id="cart"><div class="right-head"><div><span class="overline">STEP 03</span><h3>Your prepared cart</h3></div><span class="small-purple">Auto-selected</span></div><div id="cart-items" class="cart-items"><p class="none-copy">Eligible products will appear here.</p></div><div class="cart-summary"><div><span>Eligible products</span><b id="cart-count">0</b></div><div><span>Estimated item subtotal</span><b id="cart-subtotal">₹0</b></div><div class="summary-note">Eligible products are included automatically. This is a local prepared cart, not your actual Zepto cart. Confirm live prices and fees before paying.</div></div><button id="export-cart" type="button" class="outline-btn" disabled>↓ Export prepared cart</button><button id="copy-mcp-prompt" type="button" class="outline-btn" disabled>Copy for real Zepto MCP checkout ↗</button><p class="checkout-explain">Paste the copied instruction into a supported Zepto MCP client (Claude Desktop or Cursor). It will re-check live prices and prepare your actual Zepto cart. The hosted website itself does not authenticate or place orders.</p><button id="open-zepto" type="button" class="primary-btn checkout-action">Open Zepto · add & pay ↗</button><p class="checkout-explain"><span>🔒</span> CartPilot auto-selects eligible items locally. Actual Zepto cart and payment are separate; this version does not place orders.</p></section>
+        <section class="panel checkout-panel" id="cart"><div class="right-head"><div><span class="overline">STEP 03</span><h3>Your prepared cart</h3></div><span class="small-purple">Auto-selected</span></div><div id="cart-items" class="cart-items"><p class="none-copy">Eligible products will appear here.</p></div><div class="cart-summary"><div><span>Eligible products</span><b id="cart-count">0</b></div><div><span>Estimated item subtotal</span><b id="cart-subtotal">₹0</b></div><div class="summary-note">Eligible products are included automatically. This is a local prepared cart, not your actual Zepto cart. Confirm live prices and fees before paying.</div></div><button id="export-cart" type="button" class="outline-btn" disabled>↓ Export prepared cart</button><button id="sync-zepto-cart" type="button" class="primary-btn" disabled>Add verified items to real Zepto cart ↗</button><button id="copy-mcp-prompt" type="button" class="outline-btn" disabled>Copy for real Zepto MCP checkout ↗</button><p class="checkout-explain">Paste the copied instruction into a supported Zepto MCP client (Claude Desktop or Cursor). It will re-check live prices and prepare your actual Zepto cart. The hosted website itself does not authenticate or place orders.</p><button id="open-zepto" type="button" class="primary-btn checkout-action">Open Zepto · add & pay ↗</button><p class="checkout-explain"><span>🔒</span> CartPilot auto-selects eligible items locally. Actual Zepto cart and payment are separate; this version does not place orders.</p></section>
       </div></div>
       <footer><span>CartPilot · Local shopping-list assistant</span><span>Not affiliated with Zepto · No payment details collected</span></footer>
     </div>
@@ -318,6 +318,7 @@
   let toastTimeout;
   let liveConnected=false;
   let liveServer=false;
+   let localToken=null;
   let fetching=false;
   const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const put=(selector,text)=>{qs(selector).textContent=String(text);};
@@ -370,6 +371,7 @@
     const totals=L.totals(products);
     put('#cart-count',ready.length);put('#cart-subtotal',L.money(totals.subtotal));
     qs('#export-cart').disabled=!ready.length;
+     qs('#sync-zepto-cart').disabled=!liveConnected || !ready.some(p=>p.priceSource==='live' && p.liveReference);
      qs('#copy-mcp-prompt').disabled=!products.length;
     qs('#cart-items').innerHTML=ready.length?ready.map(p=>`<div class="cart-row"><span class="cart-auto" title="Auto-selected from your validated list">✓</span><div style="flex:1;min-width:0"><b>${escapeHTML(p.name)}</b><small>${p.quantity} × ${L.money(p.price)} · Automatically selected${p.priceSource==='live'?' · Zepto lookup':' · unverified price'}</small></div><span class="cart-price">${L.money(Math.round(p.quantity*p.price*100)/100)}</span></div>`).join(''):'<p class="none-copy">No eligible products yet. Import a sheet or add a product under ₹100.</p>';
   }
@@ -391,14 +393,14 @@
   async function api(path,data,timeout=60000){
     const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);
     try{
-      const response=await fetch('/api/'+path,{method:data===undefined?'GET':'POST',headers:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data),signal:ctrl.signal,cache:'no-store'});
+      const response=await fetch('/api/'+path,{method:data===undefined?'GET':'POST',headers:{'Content-Type':'application/json',...(localToken?{'x-cartpilot-token':localToken}:{})},body:data===undefined?undefined:JSON.stringify(data),signal:ctrl.signal,cache:'no-store'});
       const json=await response.json();if(!response.ok)throw Error(json.error||`HTTP ${response.status}`);return json;
     }finally{clearTimeout(timer);}
   }
   function updateLiveStatus(message){put('#live-status',message);}
   async function checkLiveStatus(){
     if(window.location.protocol==='file:'){liveServer=false;updateLiveStatus('Offline HTML mode. Live prices require the included Node.js connector.');return;}
-    try{const s=await api('status');liveServer=true;liveConnected=Boolean(s.connected);updateLiveStatus(liveConnected?'Connected to Zepto MCP · live lookup available':'Local connector ready · connect your Zepto account to fetch prices');}
+    try{const auth=await api('token');localToken=auth.token;const s=await api('status');liveServer=true;liveConnected=Boolean(s.connected);updateLiveStatus(liveConnected?'Connected to Zepto MCP · live lookup available':'Local connector ready · connect your Zepto account to fetch prices');}
     catch{liveServer=false;updateLiveStatus('Standalone mode: run the included Node.js server to enable Zepto live prices.');}
   }
   async function connectLive(){
@@ -430,15 +432,16 @@
             p.available=result.product.available!==false;
             p.priceSource='live';
             p.lookupNote='Current selling price returned by Zepto MCP; confirm at checkout.';
+             p.liveReference=result.reference;
             if(p.price>100)exceeded++;else good++;
           }else{
             // A guessed/manual price must not be treated as live-verified after a failed lookup.
-            p.price=null;p.priceSource='missing';
+            p.price=null;p.priceSource='missing';p.liveReference=null;
             p.available=result.status==='unavailable'?false:true;
             p.lookupNote=result.message||'No unambiguous live product match. Check the link/pack size.';
             bad++;
           }
-        }catch(e){p.price=null;p.priceSource='missing';p.lookupNote='Live lookup failed: '+e.message;bad++;}
+        }catch(e){p.price=null;p.priceSource='missing';p.liveReference=null;p.lookupNote='Live lookup failed: '+e.message;bad++;}
         store();render();
       }
       notify(`Zepto lookup complete. ${good} auto-selected, ${exceeded} above ₹100 and skipped, ${bad} need review.`);
@@ -511,6 +514,25 @@
       ].join('\n');
       try{await navigator.clipboard.writeText(prompt);notify('Copied Zepto MCP order instruction. Paste it into your connected Claude Desktop or Cursor client.');}
       catch{const blob=new Blob([prompt],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='cartpilot_zepto_mcp_prompt.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);notify('Clipboard unavailable: downloaded Zepto MCP instruction instead.');}
+    });
+    qs('#sync-zepto-cart').addEventListener('click',async()=>{
+      const ready=products.filter(p=>L.classify(p)==='ready' && p.priceSource==='live' && p.liveReference);
+      if(!ready.length){notify('Fetch and verify live Zepto prices first.');return;}
+      if(!confirm('Add '+ready.length+' verified products to your REAL Zepto cart? This does NOT place an order or pay.'))return;
+      const btn=qs('#sync-zepto-cart');btn.disabled=true;
+      let added=0,skipped=0,uncertain=0;
+      for(const p of ready){
+        try{
+          const result=await api('cart/add',{reference:p.liveReference,quantity:p.quantity,confirm:true},60000);
+          p.liveReference=null;
+          if(result.status==='added'){added++;p.lookupNote='Added to real Zepto cart. Confirm in Zepto.';}
+          else if(result.status==='skipped'){skipped++;p.price=result.price;p.lookupNote='Live price changed above ₹100; skipped.';}
+          else{uncertain++;p.lookupNote=result.message||'Cart update unconfirmed. Check Zepto before retrying.';}
+        }catch(e){uncertain++;p.liveReference=null;p.lookupNote='Cart not confirmed: '+e.message+'; check Zepto before retrying.';}
+        store();render();
+      }
+      notify('Real Zepto cart: '+added+' added, '+skipped+' skipped, '+uncertain+' unconfirmed. Review in Zepto.');
+      render();
     });
     qs('#connect-live').addEventListener('click',connectLive);
     qs('#fetch-all').addEventListener('click',()=>fetchUnverified());
