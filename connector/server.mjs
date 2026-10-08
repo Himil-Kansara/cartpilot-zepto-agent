@@ -12,21 +12,44 @@ const PORT = Number(process.env.PORT || 8787);
 const ADDRESS = "127.0.0.1";
 const token=randomBytes(24).toString("hex");
 let client=null, transport=null, toolList=[], connected=false, connecting=null;
+let lastConnectError=null;
 const selections=new Map();
 async function connect(){
   if(connected) return {connected:true};
   if(connecting) return connecting;
   connecting=(async()=>{
     try {
-      // mcp-remote handles Zepto's supported desktop/localhost OAuth flow.
-      transport=new StdioClientTransport({command:process.platform==="win32"?"npx.cmd":"npx",args:["-y","mcp-remote","https://mcp.zepto.co.in/mcp","--transport","http-first"],stderr:"inherit"});
+      // Official Zepto MCP uses the standard mcp-remote command and browser OAuth flow.
+      // On recent Windows Node versions, spawning a .cmd shim directly can fail.
+      const remoteArgs=["-y","mcp-remote","https://mcp.zepto.co.in/mcp"];
+      if(process.env.CARTPILOT_DEBUG==="1") remoteArgs.push("--debug");
+      const isWindows=process.platform==="win32";
+      transport=new StdioClientTransport({
+        command:isWindows?"cmd.exe":"npx",
+        args:isWindows?["/d","/c","npx",...remoteArgs]:remoteArgs,
+        stderr:"inherit"
+      });
       client=new Client({name:"cartpilot-local",version:"1.0.0"},{capabilities:{}});
       await client.connect(transport);
       const found=await client.listTools();
       toolList=found.tools || [];
       connected=true;
+      lastConnectError=null;
       return {connected:true,searchTool:selectSearchTool(toolList)?.name||null,cartTool:selectAddTool(toolList)?.name||null};
-    }catch(e){connected=false;toolList=[];try{await client?.close()}catch{}client=null;transport=null;throw e;}
+    }catch(e){
+      connected=false;toolList=[];
+      try{await client?.close()}catch{}
+      client=null;transport=null;
+      const msg=String(e?.message||e);
+      if(/\b403\b|forbidden|access.denied|invalid.redirect/i.test(msg)){
+        lastConnectError="Zepto MCP authentication was refused (HTTP 403). This is not a CartPilot session-token error. Check whether the same Zepto account can connect through an officially supported MCP client.";
+      }else if(/spawn|ENOENT|EINVAL/i.test(msg)){
+        lastConnectError="Could not start the local MCP process. Check that Node.js and npx are installed, then restart CartPilot.";
+      }else{
+        lastConnectError="Zepto MCP connection failed. Review the local terminal output (remove any secrets before sharing).";
+      }
+      throw Error(lastConnectError);
+    }
     finally{connecting=null;}
   })();
   return connecting;
@@ -69,12 +92,12 @@ const server=http.createServer(async(req,res)=>{
  try{
   const u=new URL(req.url,"http://localhost");
   const origin=req.headers.origin;
-  if(origin && origin!=="http://127.0.0.1:"+PORT && origin!=="http://localhost:"+PORT) return respond(res,403,{error:"Invalid origin"});
-  if(u.pathname==="/api/status"&&req.method==="GET")return respond(res,200,{connected,mode:"localhost",searchTool:selectSearchTool(toolList)?.name||null,cartTool:selectAddTool(toolList)?.name||null});
+  if(origin && origin!=="http://127.0.0.1:"+PORT && origin!=="http://localhost:"+PORT) return respond(res,403,{source:"cartpilot-local",error:"Invalid origin. Open the local portal at http://127.0.0.1:"+PORT+" on this computer. Netlify cannot call this localhost connector directly."});
+  if(u.pathname==="/api/status"&&req.method==="GET")return respond(res,200,{connected,lastConnectError,mode:"localhost",searchTool:selectSearchTool(toolList)?.name||null,cartTool:selectAddTool(toolList)?.name||null});
   if(u.pathname==="/api/token"&&req.method==="GET")return respond(res,200,{token});
   if(u.pathname.startsWith("/api/")){
     if(req.method!=="POST")return respond(res,405,{error:"Method not allowed"});
-    if(req.headers["x-cartpilot-token"]!==token)return respond(res,403,{error:"Invalid session token"});
+    if(req.headers["x-cartpilot-token"]!==token)return respond(res,403,{source:"cartpilot-local",error:"Invalid local session token. Restart the connector, reload the localhost page, then try Connect Zepto again."});
     const input=await readBody(req);
     if(u.pathname==="/api/connect")return respond(res,200,await connect());
     if(u.pathname==="/api/lookup")return respond(res,200,await lookup(input));
