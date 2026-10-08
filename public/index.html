@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171524">
+  <meta name="description" content="Local-first Zepto shopping list assistant with ₹100-per-item checks, Excel import and a secure checkout handoff.">
+  <title>CartPilot · Zepto Shopping Assistant</title>
+  <style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#27243a;background:#f8f7fc;font-synthesis:none}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}a{color:inherit;text-decoration:none}.hidden{display:none!important}.shell{min-height:100vh;display:grid;grid-template-columns:245px minmax(0,1fr)}.sidebar{background:#181628;color:#bdb8d0;padding:27px 18px;position:sticky;height:100vh;top:0;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:11px;padding:3px 10px;color:#fff;font-size:24px;letter-spacing:-1.2px;font-weight:800;line-height:1}.brand-thin{font-weight:450}.brand small{font-size:8px;letter-spacing:2.1px;font-weight:700;display:block;color:#918caa;margin-top:9px}.brand-mark{width:43px;height:43px;background:#774dd7;border-radius:14px;display:grid;place-items:center;color:white}.brand-mark svg{width:26px}.side-divider{margin:30px 8px 24px;border-top:1px solid #302d41}.side-label,.privacy-copy{padding:0 14px;color:#77718e;font-size:10px;letter-spacing:1.2px;font-weight:800}.side-link{display:flex;align-items:center;gap:12px;margin:4px 0;padding:14px;border-radius:12px;font-size:13px;font-weight:650;color:#b4afc6}.side-link:hover,.side-link.active{background:#302747;color:#e5d7ff}.nav-ico{font-size:20px;width:20px;text-align:center;color:#bba4ed}.sidebar-bottom{margin-top:auto}.limit-bubble{border:1px solid #403657;background:#29243c;border-radius:13px;display:flex;align-items:center;padding:14px 10px;gap:10px;margin-bottom:20px}.limit-bubble .dot{width:9px;height:9px;background:#66d3a8;border-radius:50%;box-shadow:0 0 0 4px #315044}.limit-bubble strong,.limit-bubble small{display:block}.limit-bubble strong{font-size:13px;color:white}.limit-bubble small{font-size:10px;color:#a19bb7;margin-top:4px}.privacy-copy{font-size:9px;line-height:1.8}.privacy-copy span{font-size:11px;letter-spacing:0;color:#a5a0b7;font-weight:400}.main{min-width:0}.topbar{height:65px;border-bottom:1px solid #eceaf4;display:flex;justify-content:space-between;align-items:center;padding:0 39px;background:rgba(255,255,255,.66)}.crumb{font-size:12px;color:#77718b}.crumb-slash{color:#aaa4b5;margin:0 12px}.mode{display:flex;align-items:center;gap:9px;font-size:11px;color:#5d5871;font-weight:600}.mode-dot{height:7px;width:7px;border-radius:50%;background:#10a674;box-shadow:0 0 0 4px #dff8ef}.content{max-width:1390px;padding:35px 38px 20px;margin:auto}.hero-row{display:flex;justify-content:space-between;align-items:center;gap:22px;margin-bottom:30px}.eyebrow,.overline{font-size:10px;letter-spacing:1.7px;font-weight:800;color:#8362cb}.eyebrow{margin-bottom:15px}.sparkle{font-size:18px;vertical-align:-2px;margin-right:5px}h1{margin:0;font-size:clamp(28px,3.05vw,43px);line-height:1.16;letter-spacing:-1.7px;font-weight:780;color:#232035}h1 span{color:#7852d3}.subtitle{max-width:620px;font-size:13px;line-height:1.75;color:#7c778e;margin:14px 0 0}.hero-icon{min-width:155px;width:155px;height:145px}.hero-icon svg{width:100%;height:100%}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:23px}.kpi{background:#fff;border:1px solid #eae7f1;border-radius:15px;display:flex;gap:14px;align-items:center;padding:20px 16px;box-shadow:0 5px 18px #28234505}.kpi-icon{height:43px;width:43px;border-radius:12px;display:grid;place-items:center;font-size:22px;font-weight:700;flex-shrink:0}.kpi-icon.purple{color:#815bd7;background:#f2ebff}.kpi-icon.green{color:#20a16b;background:#e4f8ee}.kpi-icon.red{color:#e3626c;background:#ffebef}.kpi-icon.amber{color:#d19a31;background:#fff5dc}.kpi-label{display:block;color:#857e92;font-size:11px;margin-bottom:7px}.kpi strong{font-size:22px;letter-spacing:-.6px;color:#28233d}.workspace-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.93fr);gap:21px}.left-stack,.right-stack{display:flex;flex-direction:column;gap:20px;min-width:0}.panel{background:#fff;border:1px solid #eae7f1;border-radius:17px;box-shadow:0 5px 21px #28234505;padding:23px}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.section-head h2{font-size:18px;letter-spacing:-.6px;margin:6px 0}.section-head p{font-size:11px;color:#8b8497;margin:0;line-height:1.5}.text-btn,.muted-btn{border:0;background:none;color:#7451c7;font-size:11px;font-weight:700;white-space:nowrap}.muted-btn{color:#9994a4}.tabs{display:flex;gap:5px;background:#f7f5fb;border-radius:10px;padding:5px;margin-bottom:21px;overflow:auto}.tab{flex:1;border:0;border-radius:8px;padding:12px 9px;font-size:11px;white-space:nowrap;background:transparent;color:#858096;font-weight:700}.tab.active{background:#fff;box-shadow:0 2px 9px #21134312;color:#6d46c6}.field-label{font-size:11px;font-weight:750;color:#4e485c;display:block;margin:0 0 9px}textarea,input:not([type="file"]):not([type="checkbox"]){width:100%;border:1px solid #e5e2ed;background:#fcfbfe;border-radius:10px;padding:12px 13px;color:#302b42;outline:none;font-size:12px}textarea:focus,input:focus{border-color:#9377d8;box-shadow:0 0 0 3px #8c6de81b}textarea{min-height:123px;resize:vertical;line-height:1.75}input::placeholder,textarea::placeholder{color:#b7b2c4}.tip{display:flex;gap:8px;background:#f4f0ff;border-radius:9px;color:#746590;font-size:10.5px;line-height:1.6;padding:12px;margin:12px 0 18px}.tip-symbol{font-weight:900;font-size:15px;line-height:1.1;color:#7d55d1}.primary-btn{display:flex;align-items:center;justify-content:center;gap:15px;width:100%;border:0;border-radius:10px;background:#7750d2;color:#fff;padding:14px 16px;font-size:12px;font-weight:750;box-shadow:0 5px 13px #7750d21c;transition:background .15s}.primary-btn:hover{background:#6340b8}.primary-btn span{font-size:17px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:19px}.form-wide{grid-column:span 2}.dropzone{border:1.5px dashed #cbb8f3;background:#fbf9ff;border-radius:11px;min-height:166px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;cursor:pointer;color:#8e85a1;font-size:11px;padding:18px}.dropzone:hover,.dropzone.drag-over{background:#f1ebff;border-color:#8f62dc}.dropzone b{font-size:12px;color:#48415f}.upload-art{font-size:27px;color:#8159d1}.file-name{color:#7655cc;font-weight:650}.upload-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 18px;font-size:10px;color:#817992}.upload-foot a{color:#774bce;font-weight:700;white-space:nowrap}.filter-tabs{display:flex;align-items:center;gap:14px;border-bottom:1px solid #eeeaf4;overflow:auto}.filter{white-space:nowrap;border:0;border-bottom:2px solid transparent;background:transparent;padding:11px 0;color:#918b9f;font-weight:700;font-size:11px}.filter.active{color:#704ac6;border-bottom-color:#8358df}.filter span{font-size:10px;border-radius:7px;background:#f2eff8;padding:3px 5px;margin-left:4px}.product-list{padding-top:5px;min-height:170px}.empty{text-align:center;padding:36px 5px;display:flex;align-items:center;flex-direction:column;gap:7px}.empty span{color:#8e6bd7;background:#f4efff;border-radius:14px;height:50px;width:50px;display:grid;place-items:center;font-size:26px}.empty b{font-size:13px;color:#464054;margin-top:4px}.empty small{font-size:11px;color:#a29cad}.product-row{padding:16px 0;border-bottom:1px solid #f0edf4;display:flex;gap:11px;align-items:flex-start}.product-row:last-child{border-bottom:0}.product-visual{background:#f3effb;height:40px;min-width:40px;border-radius:10px;color:#906ed1;display:grid;place-items:center;font-size:17px}.product-info{flex:1;min-width:0}.product-title{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.product-name{font-size:12px;line-height:1.45;color:#3d364c;font-weight:740;overflow-wrap:anywhere}.status{border-radius:7px;padding:5px 7px;font-size:9px;font-weight:800;white-space:nowrap}.status.ready{background:#e3f8ed;color:#20845a}.status.skipped{background:#fff0ee;color:#d3534b}.status.needs{background:#fff4d9;color:#aa762c}.status.unavailable{background:#f2f1f4;color:#797483}.product-meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:5px;color:#a49dac;font-size:10px}.product-meta a{color:#7451cc;text-decoration:underline;text-underline-offset:2px}.editor-line{display:flex;align-items:end;gap:9px;flex-wrap:wrap;margin-top:11px}.inline-field{display:flex;flex-direction:column;gap:4px}.inline-field label{font-size:9px;font-weight:650;color:#928b9f}.inline-field input{width:93px;padding:8px;font-size:11px;border-radius:7px}.inline-field.qty input{width:60px}.tiny-btn{border:1px solid #e8e3ef;background:white;color:#75698b;border-radius:7px;padding:8px 11px;font-weight:700;font-size:10px}.tiny-btn:hover{background:#f6f2ff;color:#704ac6}.tiny-btn.remove{margin-left:auto;color:#ac8c99}.item-note{font-size:10px;color:#d45e59;margin-top:8px;line-height:1.5}.item-note.neutral{color:#a1773b}.rule-panel{padding:21px 24px;background:linear-gradient(155deg,#f8f5ff,#fff 79%)}.rule-top{display:flex;align-items:center;justify-content:space-between}.rule-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#efe8ff;color:#7751ce;font-size:20px}.rule-pill,.small-purple{font-size:9px;color:#7852c8;background:#ede6ff;border-radius:20px;padding:7px 9px;font-weight:800;letter-spacing:.4px}.rule-title{font-size:11px;color:#77708b;margin:22px 0 4px}.rule-amount{font-size:42px;letter-spacing:-2px;color:#5c3db2;font-weight:830;margin:0 0 22px}.rule-amount span{font-size:21px}.rule-detail{font-size:11px;color:#6c6479;display:flex;align-items:center;gap:9px;margin:11px 0}.green-tick,.red-cross{display:grid;place-items:center;width:19px;height:19px;font-size:13px;font-weight:800;border-radius:50%}.green-tick{background:#dff6e8;color:#149e69}.red-cross{background:#ffe9e9;color:#d95555}.rule-foot{font-size:10px;line-height:1.7;color:#9b93a9;border-top:1px solid #ede8f6;margin:20px 0 0;padding-top:17px}.right-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.right-head h3{font-size:16px;letter-spacing:-.4px;margin:7px 0 0}.alerts-count{border-radius:8px;padding:6px 10px;background:#fff0ee;color:#d55a4b;font-size:10px;font-weight:800}.none-copy{font-size:11px;color:#a39dae;line-height:1.6;margin:4px 0 10px}.alert{padding:10px 12px;background:#fff5f2;border:1px solid #ffe3dc;border-radius:10px;margin-bottom:8px}.alert strong{font-size:11px;display:block;color:#974c4d;overflow-wrap:anywhere}.alert small{font-size:10px;color:#c27470;line-height:1.6}.alerts-list{max-height:270px;overflow:auto}.cart-row{padding:11px 0;border-bottom:1px solid #f1eef5;display:flex;align-items:center;gap:9px}.cart-row:last-child{border:0}.cart-row input[type="checkbox"]{accent-color:#7852d2;width:15px;height:15px}.cart-row label{flex:1;min-width:0;cursor:pointer}.cart-row b{display:block;font-size:11px;color:#484154;overflow-wrap:anywhere}.cart-row small{display:block;font-size:10px;color:#928b9d;margin-top:5px}.cart-row .cart-price{font-size:11px;font-weight:800;white-space:nowrap;color:#5b526d}.cart-items{max-height:350px;overflow:auto;margin-bottom:7px}.cart-summary{background:#faf9fd;border-radius:12px;padding:14px;margin:17px 0}.cart-summary>div:not(.summary-note){display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#888194;padding:5px 0}.cart-summary b{font-size:13px;color:#383043}.summary-note{font-size:9px!important;color:#a39aaa!important;line-height:1.5;border-top:1px solid #ece7f4;margin-top:10px;padding-top:12px}.outline-btn{width:100%;padding:12px;border:1px solid #dbccf2;border-radius:10px;background:#fff;color:#7047c4;font-size:11px;font-weight:750;margin-bottom:11px}.outline-btn:not(:disabled):hover{background:#f8f5ff}.checkout-action{font-size:11px}.checkout-explain{font-size:10px;line-height:1.7;color:#918a9e;margin:13px 0 0}.checkout-explain span{margin-right:4px}footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin:27px 0 0;color:#aaa3b6;font-size:10px}#toast{position:fixed;bottom:24px;right:24px;max-width:min(420px,calc(100vw - 32px));padding:14px 18px;background:#2b233f;color:#fff;border-radius:11px;box-shadow:0 12px 30px #2b233f35;font-size:12px;line-height:1.5;z-index:10;pointer-events:none;opacity:0;transform:translateY(10px);transition:opacity .15s,transform .15s}#toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1120px){.shell{grid-template-columns:190px minmax(0,1fr)}.sidebar{padding:25px 12px}.content{padding:28px 24px}.topbar{padding:0 24px}.workspace-grid{grid-template-columns:minmax(0,1fr) minmax(250px,.84fr);gap:14px}.kpis{gap:10px}.kpi{padding:14px 11px;gap:8px}.kpi-icon{height:38px;width:38px}.kpi strong{font-size:19px}.panel{padding:17px}}
+@media(max-width:850px){.shell{display:block}.sidebar{position:static;width:100%;height:auto;padding:10px 18px;flex-direction:row;align-items:center;justify-content:space-between}.brand{font-size:21px}.brand-mark{height:37px;width:37px}.brand small{font-size:7px;margin-top:6px}.sidebar .side-divider,.sidebar .side-label,.sidebar .side-link,.sidebar-bottom{display:none}.topbar{height:47px;padding:0 20px}.content{padding:25px 20px}.hero-icon{height:110px;min-width:100px;width:100px}.workspace-grid{grid-template-columns:1fr}.right-stack{display:grid;grid-template-columns:1fr 1fr;align-items:start}.checkout-panel{grid-column:span 2}.rule-panel,.alerts-panel{min-height:270px}}
+@media(max-width:520px){.content{padding:22px 14px}.topbar{padding:0 15px}.mode{font-size:9px}.hero-row{margin-bottom:22px}.hero-icon{display:none}.subtitle{font-size:12px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.kpi{padding:13px}.kpi strong{font-size:20px}.kpi-label{font-size:10px}.panel{padding:17px}.right-stack{display:flex}.rule-panel,.alerts-panel{min-height:auto}.tabs{gap:0}.tab{font-size:10px;padding:11px 6px}.filter-tabs{gap:11px}.product-row{gap:8px}.product-visual{width:34px;min-width:34px;height:34px}.product-title{gap:4px}.status{font-size:8px;padding:5px}.section-head h2{font-size:16px}.section-head p{font-size:10px}footer{font-size:9px}}
+
+.template-links{display:flex;gap:11px;align-items:center;white-space:nowrap}.template-links a{color:#774bce;font-weight:750}
+
+/* Live-price connector and automatic prepared-cart status */
+.live-panel{background:linear-gradient(130deg,#fff,#f9f6ff)}
+.live-panel .section-head{margin-bottom:14px}
+.live-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.live-actions .outline-btn{margin:0}
+.live-actions .primary-btn{font-size:11px}
+.live-help{font-size:10px;line-height:1.7;color:#847b94;margin:12px 0 0}
+.live-badge{display:inline-block;padding:3px 7px;border-radius:7px;background:#e3f8ed;color:#1c8052;font-size:9px;font-weight:800}
+.live-badge.other{background:#f2eff8;color:#756790}
+.lookup-status{font-size:10px;color:#7250bf;margin-top:8px}
+.lookup-status.error{color:#a25a42}
+.cart-auto{color:#23865c;font-size:12px;font-weight:900;flex:0 0 auto}
+.tiny-btn.fetch{color:#5b42ae}
+@media(max-width:520px){.live-actions{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a href="#top" class="brand" aria-label="CartPilot home"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 4.5h2.7l2.3 10.3c.2.9.9 1.4 1.8 1.4h8.3c.8 0 1.6-.6 1.8-1.4l1.2-6.9H7.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.6" cy="20" r="1.5" fill="currentColor"/><circle cx="18.4" cy="20" r="1.5" fill="currentColor"/></svg></span><span>cart<span class="brand-thin">pilot</span><small>SHOPPING WORKSPACE</small></span></a>
+    <div class="side-divider"></div>
+    <p class="side-label">YOUR WORKSPACE</p>
+    <a href="#import" class="side-link active"><span class="nav-ico">▣</span> Order builder</a>
+    <a href="#products" class="side-link"><span class="nav-ico">☷</span> Product validation</a>
+    <a href="#cart" class="side-link"><span class="nav-ico">◈</span> Prepared cart</a>
+    <div class="sidebar-bottom"><div class="limit-bubble"><span class="dot"></span><span><strong>₹100 / product</strong><small>Your active price rule</small></span></div><div class="privacy-copy">LOCAL-FIRST WORKSPACE<br><span>Data stays in this browser.</span></div></div>
+  </aside>
+  <main class="main" id="top">
+    <div class="topbar"><span class="crumb">Workspace <span class="crumb-slash">/</span> Shopping assistant</span><span class="mode"><span class="mode-dot"></span> Assisted checkout mode</span></div>
+    <div class="content">
+      <div class="hero-row"><div><div class="eyebrow"><span class="sparkle">✦</span> SMART SHOPPING AUTOMATION</div><h1>Build your cart.<br><span>Skip the overpriced.</span></h1><p class="subtitle">Add products from a Zepto link or spreadsheet. CartPilot reviews every unit price, skips items above ₹100, and gets your shopping list ready.</p></div><div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 140 140" fill="none"><circle cx="70" cy="70" r="59" stroke="#d6c5fe" stroke-dasharray="5 7"/><circle cx="70" cy="70" r="43" fill="#f2eaff"/><path d="M40 48h13l9 41h38l8-29H56" stroke="#6844ca" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="68" cy="99" r="5" fill="#6844ca"/><circle cx="96" cy="99" r="5" fill="#6844ca"/><path d="M89 36l2.3 7.7L99 46l-7.7 2.3L89 56l-2.3-7.7L79 46l7.7-2.3L89 36Z" fill="#d8aa43"/></svg></div></div>
+      <div class="kpis" id="kpis"><div class="kpi"><div class="kpi-icon purple">▤</div><div><span class="kpi-label">Total products</span><strong id="stat-total">0</strong></div></div><div class="kpi"><div class="kpi-icon green">✓</div><div><span class="kpi-label">Eligible</span><strong id="stat-eligible">0</strong></div></div><div class="kpi"><div class="kpi-icon red">!</div><div><span class="kpi-label">Skipped</span><strong id="stat-skipped">0</strong></div></div><div class="kpi"><div class="kpi-icon amber">₹</div><div><span class="kpi-label">Prepared subtotal</span><strong id="stat-subtotal">₹0</strong></div></div></div>
+      <div class="workspace-grid"><div class="left-stack">
+        <section class="panel input-panel" id="import"><div class="section-head"><div><span class="overline">STEP 01</span><h2>Add your products</h2><p>Choose whichever input works best for you.</p></div><button type="button" id="demo-btn" class="text-btn">↗ Load example</button></div>
+          <div class="tabs" role="tablist" aria-label="Input type"><button class="tab active" type="button" data-tab="paste" role="tab" aria-selected="true">↗ Product links</button><button class="tab" type="button" data-tab="upload" role="tab" aria-selected="false">▤ Excel / CSV</button><button class="tab" type="button" data-tab="manual" role="tab" aria-selected="false">＋ Add manually</button></div>
+          <div class="tab-content" id="paste-pane"><label class="field-label" for="links-text">Paste Zepto product links</label><textarea id="links-text" spellcheck="false" placeholder="https://www.zepto.com/pn/product-name/pvid/...&#10;https://www.zepto.com/pn/another-product/pvid/...&#10;&#10;Optional: URL | price | quantity"></textarea><div class="tip"><span class="tip-symbol">ⓘ</span><span>On the local-server version, connect your Zepto account to fetch current product prices. Eligible items are placed into the prepared cart automatically. Without a connection, link prices need manual entry. One link per line; optional <b>URL | price | qty</b>.</span></div><button class="primary-btn" id="links-import" type="button">Import &amp; validate links <span>→</span></button></div>
+          <div class="tab-content hidden" id="upload-pane"><label for="file-input" id="dropzone" class="dropzone"><span class="upload-art">⇧</span><b>Drop your sheet here, or tap to browse</b><span>Supports .xlsx and .csv, up to 5 MB</span><span class="file-name" id="selected-file">No file selected</span></label><input id="file-input" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><div class="upload-foot"><span>Columns: <b>Product, Price, Quantity, URL</b></span><span class="template-links"><a href="data:text/csv;charset=utf-8,Product%2CPrice%2CQuantity%2CURL%2CAvailability%0AAmul%20Taaza%20Milk%20500%20ml%2C65%2C2%2C%2CIn%20Stock%0ABasmati%20Rice%201%20kg%2C145%2C1%2C%2CIn%20Stock%0ABrown%20Bread%2C45%2C3%2C%2CIn%20Stock%0ABiscuits%20Pack%2C100%2C4%2C%2CIn%20Stock%0AProduct%20without%20price%2C%2C1%2C%2CIn%20Stock%0ASold%20Out%20Snack%2C30%2C1%2C%2COut%20of%20Stock%0A" download>↓ CSV</a><a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,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" download>↓ Excel</a></span></div><button class="primary-btn" id="file-import" type="button">Import spreadsheet <span>→</span></button></div>
+          <div class="tab-content hidden" id="manual-pane"><form id="add-form"><div class="form-grid"><div class="form-wide"><label class="field-label" for="manual-name">Product name</label><input id="manual-name" required maxlength="140" placeholder="e.g. Amul Taaza Milk"></div><div><label class="field-label" for="manual-price">Unit price (₹)</label><input id="manual-price" type="number" min="0" max="999999" step="0.01" placeholder="e.g. 65" required></div><div><label class="field-label" for="manual-qty">Quantity</label><input id="manual-qty" type="number" min="1" max="9999" step="1" value="1" required></div><div class="form-wide"><label class="field-label" for="manual-url">Zepto product link (optional)</label><input id="manual-url" type="url" placeholder="https://www.zepto.com/pn/..."></div></div><button class="primary-btn" type="submit">Add product <span>→</span></button></form></div>
+        </section>
+        <section class="panel live-panel" id="live-panel"><div class="section-head"><div><span class="overline">OPTIONAL LIVE CONNECTION</span><h2>Zepto price lookup</h2><p id="live-status" aria-live="polite">Checking whether a local Zepto connector is available…</p></div></div><div class="live-actions"><button type="button" class="outline-btn" id="connect-live">Connect Zepto account</button><button type="button" class="primary-btn" id="fetch-all">Fetch missing / unverified prices ↗</button></div><p class="live-help">Uses Zepto's official MCP with your own sign-in. Requires the local Node.js server version; opening the standalone HTML alone cannot fetch live prices. Uncertain matches are never auto-selected.</p></section>
+        <section class="panel products-panel" id="products"><div class="section-head"><div><span class="overline">STEP 02</span><h2>Product validation</h2><p>Products over ₹100 are flagged and excluded automatically.</p></div><button type="button" id="clear-btn" class="muted-btn">Clear all</button></div><div class="filter-tabs" id="filter-tabs"><button type="button" class="filter active" data-filter="all">All <span id="chip-all">0</span></button><button type="button" class="filter" data-filter="ready">Eligible <span id="chip-ready">0</span></button><button type="button" class="filter" data-filter="skipped">Skipped <span id="chip-skipped">0</span></button><button type="button" class="filter" data-filter="needs">Needs review <span id="chip-needs">0</span></button></div><div id="product-list" class="product-list"><div class="empty"><span>▤</span><b>No products added yet</b><small>Import Zepto links or a spreadsheet to begin.</small></div></div></section>
+      </div><div class="right-stack">
+        <section class="panel rule-panel"><div class="rule-top"><span class="rule-icon">✧</span><span class="rule-pill">ACTIVE RULE</span></div><p class="rule-title">Max unit price</p><p class="rule-amount">₹100<span>.00</span></p><div class="rule-detail"><span class="green-tick">✓</span> ₹100 or below: eligible</div><div class="rule-detail"><span class="red-cross">×</span> Above ₹100: alert & skip</div><p class="rule-foot">Your overall cart total is unlimited. Quantity never changes whether a unit is eligible.</p></section>
+        <section class="panel alerts-panel" id="alerts-panel"><div class="right-head"><div><span class="overline">LIVE ALERTS</span><h3>Price alerts</h3></div><span class="alerts-count" id="alerts-count">0</span></div><div class="alerts-list" id="alerts-list"><p class="none-copy">No products skipped so far.</p></div></section>
+        <section class="panel checkout-panel" id="cart"><div class="right-head"><div><span class="overline">STEP 03</span><h3>Your prepared cart</h3></div><span class="small-purple">Auto-selected</span></div><div id="cart-items" class="cart-items"><p class="none-copy">Eligible products will appear here.</p></div><div class="cart-summary"><div><span>Eligible products</span><b id="cart-count">0</b></div><div><span>Estimated item subtotal</span><b id="cart-subtotal">₹0</b></div><div class="summary-note">Eligible products are included automatically. This is a local prepared cart, not your actual Zepto cart. Confirm live prices and fees before paying.</div></div><button id="export-cart" type="button" class="outline-btn" disabled>↓ Export prepared cart</button><button id="open-zepto" type="button" class="primary-btn checkout-action">Open Zepto · add & pay ↗</button><p class="checkout-explain"><span>🔒</span> CartPilot auto-selects eligible items locally. Actual Zepto cart and payment are separate; this version does not place orders.</p></section>
+      </div></div>
+      <footer><span>CartPilot · Local shopping-list assistant</span><span>Not affiliated with Zepto · No payment details collected</span></footer>
+    </div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function (root) {
+  'use strict';
+  const LIMIT = 100;
+  const MAX_ROWS = 2000;
+  const HEADERS = {
+    name: ['product', 'productname', 'item', 'itemname', 'name', 'title', 'producttitle'],
+    price: ['price', 'unitprice', 'sellingprice', 'saleprice', 'discountedprice', 'currentprice', 'cost', 'unitcost'],
+    quantity: ['quantity', 'qty', 'count', 'units', 'number'],
+    url: ['url', 'link', 'producturl', 'productlink', 'zeptolink', 'zeptourl'],
+    availability: ['availability', 'stock', 'status', 'instock']
+  };
+  function cleanHeader(value) { return String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+  function numeric(value) {
+    if (value === '' || value === null || value === undefined) return null;
+    if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+    const raw = String(value).replace(/[₹\s,]/g, '').trim();
+    if (!/^(?:\d+\.?\d*|\.\d+)$/.test(raw)) return null;
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  }
+  function money(value) { return '₹' + Number(value || 0).toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: value % 1 ? 2 : 0 }); }
+  function validZeptoURL(value) {
+    if (!value) return '';
+    try {
+      const url = new URL(String(value).trim());
+      const host = url.hostname.toLowerCase();
+      if (url.protocol !== 'https:' || !(host === 'zepto.com' || host === 'www.zepto.com' || host === 'zeptonow.com' || host === 'www.zeptonow.com')) return '';
+      return url.href;
+    } catch { return ''; }
+  }
+  function nameFromLink(value) {
+    const url = validZeptoURL(value);
+    if (!url) return '';
+    const pathname = new URL(url).pathname;
+    const match = pathname.match(/\/pn\/([^/]+)/i);
+    if (!match) return 'Zepto link (identify product)';
+    let slug;
+    try { slug = decodeURIComponent(match[1]); } catch { slug = match[1]; }
+    return slug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase()).slice(0, 140) || 'Zepto product';
+  }
+  let nextId = 0;
+  function item(input, source='manual') {
+    const url = validZeptoURL(input.url || '');
+    const originalName = String(input.name ?? '').trim();
+    return {
+      id: 'i_' + Date.now().toString(36) + '_' + (++nextId).toString(36),
+      name: (originalName || nameFromLink(url) || 'Unnamed product').slice(0, 140),
+      price: numeric(input.price),
+      quantity: numeric(input.quantity ?? 1),
+      url,
+      source,
+      available: input.available === false ? false : true,
+      priceSource: input.priceSource || (numeric(input.price) === null ? 'missing' : source),
+      lookupNote: input.lookupNote || '',
+      added: false
+    };
+  }
+  function classify(record) {
+    if (record.available === false) return 'unavailable';
+    if (!Number.isInteger(record.quantity) || record.quantity < 1 || record.quantity > 9999) return 'needs';
+    if (record.price === null || !Number.isFinite(record.price) || record.price < 0 || record.price > 999999) return 'needs';
+    if (record.price > LIMIT) return 'skipped';
+    return 'ready';
+  }
+  function totals(products) {
+    const statuses = products.map(classify);
+    const eligible = products.filter((_, i) => statuses[i] === 'ready');
+    return { total: products.length, eligible: eligible.length, skipped: statuses.filter(s => s === 'skipped' || s === 'unavailable').length, needs: statuses.filter(s => s === 'needs').length, subtotal: Math.round(eligible.reduce((sum,p) => sum + p.price * p.quantity, 0) * 100) / 100 };
+  }
+  function delimiterGuess(firstLine) {
+    const options = [',', '\t', ';'];
+    return options.sort((a,b) => firstLine.split(b).length - firstLine.split(a).length)[0];
+  }
+  function parseCSV(content) {
+    const text = String(content).replace(/^\uFEFF/, '');
+    const delimiter = delimiterGuess((text.split(/\r?\n/)[0] || ''));
+    const rows = []; let row = [], field = '', quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (c === '"') {
+        if (quoted && text[i+1] === '"') { field += '"'; i++; }
+        else if (quoted || field === '') { quoted = !quoted; }
+        else field += c;
+      } else if (c === delimiter && !quoted) { row.push(field); field = ''; }
+      else if ((c === '\r' || c === '\n') && !quoted) {
+        if (c === '\r' && text[i+1] === '\n') i++;
+        row.push(field); field = '';
+        if (row.some(v => String(v).trim())) rows.push(row);
+        row = [];
+      } else field += c;
+    }
+    row.push(field);
+    if (row.some(v => String(v).trim())) rows.push(row);
+    return rows;
+  }
+  function parseRows(rows, source='sheet') {
+    if (!rows.length) return [];
+    const header = rows[0].map(cleanHeader);
+    const idx = key => header.findIndex(h => HEADERS[key].includes(h));
+    const positions = {name: idx('name'),price:idx('price'),quantity:idx('quantity'),url:idx('url'),availability:idx('availability')};
+    if (positions.name === -1 && positions.url === -1) throw new Error('Sheet needs a Product or URL column. See sample CSV.');
+    const result=[];
+    for (const line of rows.slice(1)) {
+      if (result.length >= MAX_ROWS) throw new Error('Maximum 2,000 product rows per import.');
+      const read = key => positions[key] < 0 ? '' : String(line[positions[key]] ?? '').trim();
+      const name = read('name'), url = read('url');
+      if (!name && !url) continue;
+      const availability = read('availability').toLowerCase();
+      const unavailable = ['false','no','0','unavailable','out of stock','outofstock','sold out'].includes(availability);
+      result.push(item({name, url, price:read('price'), quantity: read('quantity') || 1, available:!unavailable}, source));
+    }
+    return result;
+  }
+  function parseLinks(text) {
+    const list=[]; let invalid=0;
+    for (const line of String(text).split(/\r?\n/)) {
+      if (!line.trim()) continue;
+      if (list.length >= MAX_ROWS) throw new Error('Maximum 2,000 product links per import.');
+      const sections = line.trim().split(/\s*\|\s*/);
+      const inputURL = sections[0].trim();
+      const url = validZeptoURL(inputURL);
+      if (!url) { invalid++; continue; }
+      list.push(item({url, price:sections[1] ?? '', quantity:sections[2] ?? 1}, 'link'));
+    }
+    return {list, invalid};
+  }
+  function escapeCell(value) {
+    let s = String(value ?? '');
+    if (/^[\s]*[=+\-@]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g,'""') + '"';
+  }
+  function exportCSV(records) {
+    const header = ['Product','Unit Price','Quantity','URL','Status','Price source'];
+    const lines = records.map(p => [p.name, p.price ?? '', p.quantity ?? '', p.url || '', classify(p), p.priceSource === 'live' ? 'Zepto live lookup' : p.priceSource || 'manual'].map(escapeCell).join(','));
+    return '\uFEFF' + [header.map(escapeCell).join(','), ...lines].join('\r\n');
+  }
+  root.CartLogic={LIMIT,MAX_ROWS,numeric,money,validZeptoURL,nameFromLink,item,classify,totals,parseCSV,parseRows,parseLinks,exportCSV};
+  if (typeof module !== 'undefined') module.exports = root.CartLogic;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* Offline XLSX first-worksheet importer. No network requests or external libraries. */
+(function(root){
+  'use strict';
+  function findEOCD(bytes,view){
+    for(let p=bytes.length-22;p>=Math.max(0,bytes.length-65557);p--) if(view.getUint32(p,true)===0x06054b50) return p;
+    throw new Error('Invalid XLSX/ZIP file.');
+  }
+  async function unzipXmlFiles(arrayBuffer){
+    const bytes=new Uint8Array(arrayBuffer),v=new DataView(arrayBuffer),e=findEOCD(bytes,v);
+    const count=v.getUint16(e+10,true),dir=v.getUint32(e+16,true),decoder=new TextDecoder();
+    if(count>20000||dir>=bytes.length) throw new Error('Unsupported or unusually large workbook.');
+    const wanted=new Map();let p=dir;
+    for(let i=0;i<count;i++){
+      if(v.getUint32(p,true)!==0x02014b50)throw new Error('Corrupt XLSX directory.');
+      const method=v.getUint16(p+10,true),size=v.getUint32(p+20,true),nameLen=v.getUint16(p+28,true),extraLen=v.getUint16(p+30,true),commentLen=v.getUint16(p+32,true),local=v.getUint32(p+42,true);
+      const name=decoder.decode(bytes.subarray(p+46,p+46+nameLen));p+=46+nameLen+extraLen+commentLen;
+      if(name==='xl/sharedStrings.xml'||name==='xl/workbook.xml'||name==='xl/_rels/workbook.xml.rels'||/^xl\/worksheets\/[^/]+\.xml$/.test(name)){
+        if(size>16000000)throw new Error('Worksheet too large.');
+        wanted.set(name,{method,size,local});
+      }
+    }
+    async function read(name){
+      const entry=wanted.get(name);if(!entry)return '';
+      const start=entry.local;
+      if(v.getUint32(start,true)!==0x04034b50)throw new Error('Invalid worksheet entry.');
+      const dataStart=start+30+v.getUint16(start+26,true)+v.getUint16(start+28,true);
+      if(dataStart+entry.size>bytes.length)throw new Error('Truncated XLSX file.');
+      const compressed=bytes.slice(dataStart,dataStart+entry.size);
+      let out;
+      if(entry.method===0)out=compressed;
+      else if(entry.method===8){
+        if(typeof DecompressionStream==='undefined')throw new Error('XLSX requires a modern browser. Try Chrome or import CSV.');
+        const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+        out=new Uint8Array(await new Response(stream).arrayBuffer());
+      } else throw new Error('Unsupported XLSX compression method.');
+      if(out.length>16000000)throw new Error('Expanded worksheet too large.');
+      return decoder.decode(out);
+    }
+    return {read,names:[...wanted.keys()]};
+  }
+  function xml(string){
+    const doc=new DOMParser().parseFromString(string,'application/xml');
+    if(doc.getElementsByTagName('parsererror').length)throw new Error('Invalid worksheet XML.');
+    return doc;
+  }
+  function getNodes(parent,name){return Array.from(parent.getElementsByTagName('*')).filter(e=>e.localName===name);}
+  function firstChildValue(parent,name){const match=getNodes(parent,name)[0];return match?match.textContent:'';}
+  function columnNumber(cellRef){const letters=String(cellRef).match(/^[A-Z]+/i)?.[0]||'A';return [...letters.toUpperCase()].reduce((acc,c)=>acc*26+c.charCodeAt(0)-64,0)-1;}
+  function sharedList(doc){return getNodes(doc,'si').map(si=>getNodes(si,'t').map(t=>t.textContent).join(''));}
+  function parseWorksheet(doc,shared){
+    const all=[];let total=0;
+    for(const row of getNodes(doc,'row')){
+      const array=[];let fallback=0;
+      const cells=Array.from(row.children).filter(e=>e.localName==='c');
+      for(const cell of cells){
+        const col=cell.getAttribute('r')?columnNumber(cell.getAttribute('r')):fallback;
+        if(col>256)continue;
+        const type=cell.getAttribute('t');let val='';
+        if(type==='inlineStr')val=getNodes(cell,'t').map(t=>t.textContent).join('');
+        else{const v=firstChildValue(cell,'v');val=type==='s'?(shared[Number(v)]??''):v;}
+        array[col]=val;fallback=col+1;
+      }
+      if(array.some(v=>String(v??'').trim()))all.push(array.map(v=>v??''));
+      if(++total>2500)throw new Error('Too many XLSX rows. Maximum 2,000 products.');
+    }
+    return all;
+  }
+  async function readFirstSheet(file){
+    if(file.size>5*1024*1024)throw new Error('File must be 5 MB or smaller.');
+    const zip=await unzipXmlFiles(await file.arrayBuffer());
+    const sharedString=await zip.read('xl/sharedStrings.xml');
+    const strings=sharedString?sharedList(xml(sharedString)):[];
+    let sheetPath='xl/worksheets/sheet1.xml';
+    const workbookText=await zip.read('xl/workbook.xml');
+    const relationshipsText=await zip.read('xl/_rels/workbook.xml.rels');
+    if(workbookText&&relationshipsText){
+      const book=xml(workbookText),rel=xml(relationshipsText);
+      const first=getNodes(book,'sheet')[0];
+      const id=first&&Array.from(first.attributes).find(a=>a.localName==='id')?.value;
+      if(id){const matching=getNodes(rel,'Relationship').find(r=>r.getAttribute('Id')===id);
+        const target=matching?.getAttribute('Target');
+        if(target){
+          if(target.startsWith('/'))sheetPath=target.slice(1);
+          else sheetPath='xl/'+target.replace(/^\.\//,'');
+          const parts=[];for(const part of sheetPath.split('/')){if(part==='..')parts.pop();else if(part!=='.')parts.push(part);}sheetPath=parts.join('/');
+        }
+      }
+    }
+    const sheetText=await zip.read(sheetPath)||await zip.read('xl/worksheets/sheet1.xml');
+    if(!sheetText)throw new Error('No readable worksheet found in XLSX.');
+    return parseWorksheet(xml(sheetText),strings);
+  }
+  root.readXLSX=readFirstSheet;
+})(typeof window!=='undefined'?window:globalThis);
+
+</script>
+<script>
+(function(){
+  'use strict';
+  const L=window.CartLogic;
+  const STORE='cartpilot_v1_products';
+  const qs=(selector,scope=document)=>scope.querySelector(selector);
+  const qsa=(selector,scope=document)=>Array.from(scope.querySelectorAll(selector));
+  let products=[];
+  let filter='all';
+  let file=null;
+  let toastTimeout;
+  let liveConnected=false;
+  let liveServer=false;
+  let fetching=false;
+  const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const put=(selector,text)=>{qs(selector).textContent=String(text);};
+  function notify(message){const el=qs('#toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('show'),3900);}
+  function store(){try{localStorage.setItem(STORE,JSON.stringify(products));}catch{notify('Browser storage is full or disabled. Export to save your list.');}}
+  function restore(){try{
+    const parsed=JSON.parse(localStorage.getItem(STORE)||'[]');
+    if(Array.isArray(parsed))products=parsed.slice(0,L.MAX_ROWS).filter(p=>p&&typeof p==='object').map(p=>{
+      const current=L.item({name:p.name,url:p.url,price:p.price,quantity:p.quantity,available:p.available,priceSource:p.priceSource==='live'?'cached live':p.priceSource,lookupNote:p.lookupNote},p.source||'sheet');
+      current.id=(typeof p.id==='string'&&/^i_[a-z0-9_]+$/.test(p.id))?p.id:current.id;
+      current.added=false;
+      return current;
+    });
+  }catch{products=[];}}
+  function duplicateKey(p){return p.url ? 'url:'+p.url : 'name:'+p.name.toLowerCase()+'|price:'+p.price;}
+  function addProducts(list){
+    if(products.length+list.length>L.MAX_ROWS){notify('Maximum 2,000 products in a list. Clear or export first.');return false;}
+    let merged=0;
+    for(const row of list){
+      const match=products.find(p=>duplicateKey(p)===duplicateKey(row)&&p.price===row.price&&p.available===row.available&&Number.isInteger(p.quantity)&&Number.isInteger(row.quantity)&&p.quantity+row.quantity<=9999);
+      if(match){match.quantity+=row.quantity;merged++;}
+      else products.push(row);
+    }
+    store();render();notify(`Processed ${list.length} row(s). ${L.totals(list).skipped} skipped; ${merged} duplicate(s) combined. Eligible items auto-selected.`);return true;
+  }
+  function render(){
+    const totals=L.totals(products);
+    put('#stat-total',totals.total);put('#stat-eligible',totals.eligible);put('#stat-skipped',totals.skipped);put('#stat-subtotal',L.money(totals.subtotal));
+    put('#chip-all',totals.total);put('#chip-ready',totals.eligible);put('#chip-skipped',totals.skipped);put('#chip-needs',totals.needs);
+    const priceAlerts=products.filter(p=>L.classify(p)==='skipped');
+    put('#alerts-count',priceAlerts.length);
+    qs('#alerts-list').innerHTML=priceAlerts.length ? priceAlerts.map(p=>`<div class="alert"><strong>⚠ ${escapeHTML(p.name)}</strong><small>${L.money(p.price)} per unit · Exceeds the limit by ${L.money(Math.round((p.price-L.LIMIT)*100)/100)}. Skipped; processing continued.</small></div>`).join('') : '<p class="none-copy">No products skipped for exceeding ₹100.</p>';
+    renderList();renderCart();
+  }
+  function matchesFilter(p){const s=L.classify(p);return filter==='all'||s===filter||(filter==='skipped'&&s==='unavailable');}
+  function renderList(){
+    const rows=products.filter(matchesFilter);
+    qs('#product-list').innerHTML=rows.length ? rows.map(p=>{
+      const status=L.classify(p),statusText={ready:'✓ Auto-selected',skipped:'↗ Over ₹100',needs:'! Needs review',unavailable:'× Unavailable'}[status];
+      const note=status==='skipped'?`Above ₹100 by ${L.money(Math.round((p.price-L.LIMIT)*100)/100)} — automatically excluded from prepared cart.`:status==='needs'?'A verified product price is missing. Connect Zepto or enter a price to continue.':status==='unavailable'?'Reported out of stock — excluded from prepared cart.':'';
+      const lookup=p.lookupNote?`<div class="lookup-status ${status==='needs'?'error':''}">${escapeHTML(p.lookupNote)}</div>`:'';
+      const sourceBadge=p.priceSource==='live'?'<span class="live-badge">✓ Zepto live lookup</span>':p.price!==null?`<span class="live-badge other">${escapeHTML(p.priceSource||'manual')} · not live</span>`:'';
+      const fetchButton=p.url||p.name?`<button type="button" class="tiny-btn fetch" data-action="fetch" aria-label="Fetch current Zepto price for ${escapeHTML(p.name)}">↻ Fetch price</button>`:'';
+      const link=p.url?`<a href="${escapeHTML(p.url)}" target="_blank" rel="noopener noreferrer">Open on Zepto ↗</a>`:'No product URL';
+      return `<article class="product-row" data-id="${escapeHTML(p.id)}"><div class="product-visual">▧</div><div class="product-info"><div class="product-title"><div class="product-name">${escapeHTML(p.name)}</div><span class="status ${status}">${statusText}</span></div><div class="product-meta"><span>${escapeHTML((p.source||'manual').toUpperCase())}</span><span>·</span>${link}${sourceBadge}</div><div class="editor-line"><div class="inline-field"><label for="price-${escapeHTML(p.id)}">Unit price ₹</label><input id="price-${escapeHTML(p.id)}" aria-label="Unit price for ${escapeHTML(p.name)}" data-field="price" inputmode="decimal" type="number" step="0.01" min="0" max="999999" value="${p.price===null?'':escapeHTML(p.price)}" placeholder="Required"></div><div class="inline-field qty"><label for="qty-${escapeHTML(p.id)}">Qty</label><input id="qty-${escapeHTML(p.id)}" aria-label="Quantity for ${escapeHTML(p.name)}" data-field="quantity" inputmode="numeric" type="number" min="1" max="9999" step="1" value="${p.quantity===null?'':escapeHTML(p.quantity)}"></div>${fetchButton}<button type="button" class="tiny-btn remove" data-action="remove" aria-label="Remove ${escapeHTML(p.name)}">Remove ×</button></div>${note?`<div class="item-note ${status==='needs'?'neutral':''}">${escapeHTML(note)}</div>`:''}${lookup}</div></article>`;
+    }).join('') : `<div class="empty"><span>▤</span><b>${products.length?'No matching products':'No products added yet'}</b><small>${products.length?'Try another status filter.':'Import Zepto links or a spreadsheet to begin.'}</small></div>`;
+  }
+  function renderCart(){
+    const ready=products.filter(p=>L.classify(p)==='ready');
+    const totals=L.totals(products);
+    put('#cart-count',ready.length);put('#cart-subtotal',L.money(totals.subtotal));
+    qs('#export-cart').disabled=!ready.length;
+    qs('#cart-items').innerHTML=ready.length?ready.map(p=>`<div class="cart-row"><span class="cart-auto" title="Auto-selected from your validated list">✓</span><div style="flex:1;min-width:0"><b>${escapeHTML(p.name)}</b><small>${p.quantity} × ${L.money(p.price)} · Automatically selected${p.priceSource==='live'?' · Zepto lookup':' · unverified price'}</small></div><span class="cart-price">${L.money(Math.round(p.quantity*p.price*100)/100)}</span></div>`).join(''):'<p class="none-copy">No eligible products yet. Import a sheet or add a product under ₹100.</p>';
+  }
+  async function importFile(){
+    if(!file){notify('Choose a CSV or XLSX file first.');return;}
+    const btn=qs('#file-import');btn.disabled=true;btn.textContent='Reading spreadsheet…';
+    try{
+      if(file.size>5*1024*1024)throw new Error('Maximum upload size is 5 MB.');
+      const extension=(file.name.split('.').pop()||'').toLowerCase();
+      let rows;
+      if(extension==='csv') rows=L.parseCSV(await file.text());
+      else if(extension==='xlsx') rows=await window.readXLSX(file);
+      else throw new Error('Only .csv and .xlsx files are supported.');
+      const list=L.parseRows(rows,'sheet');
+      if(!list.length)throw new Error('No usable products found. Check your column headings.');
+      if(addProducts(list)){qs('#file-input').value='';file=null;put('#selected-file','No file selected');if(liveConnected)await fetchUnverified(list);}
+    }catch(e){notify('Import failed: '+e.message);}finally{btn.disabled=false;btn.innerHTML='Import spreadsheet <span>→</span>';}
+  }
+  async function api(path,data,timeout=60000){
+    const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);
+    try{
+      const response=await fetch('/api/'+path,{method:data===undefined?'GET':'POST',headers:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data),signal:ctrl.signal,cache:'no-store'});
+      const json=await response.json();if(!response.ok)throw Error(json.error||`HTTP ${response.status}`);return json;
+    }finally{clearTimeout(timer);}
+  }
+  function updateLiveStatus(message){put('#live-status',message);}
+  async function checkLiveStatus(){
+    if(window.location.protocol==='file:'){liveServer=false;updateLiveStatus('Offline HTML mode. Live prices require the included Node.js connector.');return;}
+    try{const s=await api('status');liveServer=true;liveConnected=Boolean(s.connected);updateLiveStatus(liveConnected?'Connected to Zepto MCP · live lookup available':'Local connector ready · connect your Zepto account to fetch prices');}
+    catch{liveServer=false;updateLiveStatus('Standalone mode: run the included Node.js server to enable Zepto live prices.');}
+  }
+  async function connectLive(){
+    if(!liveServer){notify('Live Zepto requires the local server. See README in the source ZIP.');return false;}
+    const btn=qs('#connect-live');btn.disabled=true;btn.textContent='Connecting… complete Zepto sign-in in browser';
+    updateLiveStatus('Connecting… use the Zepto login window on this computer.');
+    try{const result=await api('connect',{},180000);liveConnected=Boolean(result.connected);updateLiveStatus(liveConnected?'✓ Connected to Zepto MCP':'Connection not completed');notify('Connected. Fetching prices for your pending items automatically.');if(products.some(p=>p.priceSource!=='live'))await fetchUnverified();return liveConnected;}
+    catch(e){updateLiveStatus('Zepto connection not ready: '+e.message);notify('Connect failed: '+e.message);return false;}
+    finally{btn.disabled=false;btn.textContent='Connect Zepto account';}
+  }
+  async function fetchUnverified(selection){
+    if(fetching){notify('Price lookups are already running.');return;}
+    if(!liveConnected){notify('Connect your Zepto account first to fetch live prices.');return;}
+    const pool=selection?selection.filter(p=>products.some(x=>x.id===p.id)):products.filter(p=>p.priceSource!=='live');
+    if(!pool.length){notify('No products need a price lookup.');return;}
+    if(pool.length>50 && !confirm(`This will run ${pool.length} live product searches. Continue?`))return;
+    fetching=true;
+    const btn=qs('#fetch-all');btn.disabled=true;
+    let good=0,bad=0,exceeded=0;
+    try{
+      for(let i=0;i<pool.length;i++){
+        const p=products.find(x=>x.id===pool[i].id);if(!p)continue;
+        updateLiveStatus(`Looking up product ${i+1} of ${pool.length}: ${p.name}`);
+        try{
+          const result=await api('lookup',{name:p.name,url:p.url},45000);
+          if(result.status==='found' && result.product && Number.isFinite(result.product.price)){
+            p.name=String(result.product.name||p.name).slice(0,140);
+            p.price=result.product.price;
+            p.available=result.product.available!==false;
+            p.priceSource='live';
+            p.lookupNote='Current selling price returned by Zepto MCP; confirm at checkout.';
+            if(p.price>100)exceeded++;else good++;
+          }else{
+            // A guessed/manual price must not be treated as live-verified after a failed lookup.
+            p.price=null;p.priceSource='missing';
+            p.available=result.status==='unavailable'?false:true;
+            p.lookupNote=result.message||'No unambiguous live product match. Check the link/pack size.';
+            bad++;
+          }
+        }catch(e){p.price=null;p.priceSource='missing';p.lookupNote='Live lookup failed: '+e.message;bad++;}
+        store();render();
+      }
+      notify(`Zepto lookup complete. ${good} auto-selected, ${exceeded} above ₹100 and skipped, ${bad} need review.`);
+    }finally{fetching=false;btn.disabled=false;updateLiveStatus('Connected to Zepto MCP · live lookup available');}
+  }
+  function setup(){
+    restore();render();
+    qsa('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
+      qsa('[data-tab]').forEach(b=>{b.classList.toggle('active',b===btn);b.setAttribute('aria-selected',b===btn?'true':'false');});
+      for(const type of ['paste','upload','manual'])qs('#'+type+'-pane').classList.toggle('hidden',type!==btn.dataset.tab);
+    }));
+    qs('#links-import').addEventListener('click',async()=>{
+      const raw=qs('#links-text').value;
+      if(!raw.trim()){notify('Paste at least one Zepto product URL.');return;}
+      try{const {list,invalid}=L.parseLinks(raw);
+        if(!list.length){notify('No valid Zepto product URLs found. Use https://www.zepto.com/...');return;}
+        if(addProducts(list)){qs('#links-text').value='';if(invalid)notify(`Added ${list.length} links. Ignored ${invalid} invalid/non-Zepto line(s).`);if(liveConnected)await fetchUnverified(list);}
+      }catch(e){notify(e.message);}
+    });
+    qs('#add-form').addEventListener('submit',e=>{
+      e.preventDefault();const urlRaw=qs('#manual-url').value.trim();if(urlRaw&&!L.validZeptoURL(urlRaw)){notify('Only HTTPS Zepto product links are accepted.');return;}
+      const record=L.item({name:qs('#manual-name').value,price:qs('#manual-price').value,quantity:qs('#manual-qty').value,url:urlRaw},'manual');
+      if(addProducts([record])){qs('#add-form').reset();qs('#manual-qty').value=1;if(liveConnected&&record.url)fetchUnverified([record]);}
+    });
+    const fileInput=qs('#file-input'),drop=qs('#dropzone');
+    fileInput.addEventListener('change',()=>setFile(fileInput.files?.[0]));
+    for(const event of ['dragover','dragenter'])drop.addEventListener(event,e=>{e.preventDefault();drop.classList.add('drag-over');});
+    for(const event of ['dragleave','drop'])drop.addEventListener(event,e=>{e.preventDefault();drop.classList.remove('drag-over');});
+    drop.addEventListener('drop',e=>setFile(e.dataTransfer?.files?.[0]));
+    qs('#file-import').addEventListener('click',importFile);
+    qs('#demo-btn').addEventListener('click',()=>{
+      const demo=[['Amul Taaza Milk 500 ml',65,2],['Basmati Rice 1 kg',145,1],['Brown Bread',45,3],['Biscuits Pack',100,4],['Unknown price item',null,1]];
+      addProducts(demo.map(([name,price,quantity])=>L.item({name,price,quantity},'demo')));
+      qs('#products').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    qs('#clear-btn').addEventListener('click',()=>{if(!products.length)return;if(!confirm('Clear all imported products and prepared-cart confirmations?'))return;products=[];store();render();notify('Shopping list cleared.');});
+    qsa('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{filter=btn.dataset.filter;qsa('[data-filter]').forEach(b=>b.classList.toggle('active',b===btn));renderList();}));
+    qs('#product-list').addEventListener('click',e=>{
+      const target=e.target.closest('[data-action]');if(!target)return;
+      const row=target.closest('[data-id]');if(!row)return;
+      if(target.dataset.action==='remove'){products=products.filter(p=>p.id!==row.dataset.id);store();render();notify('Product removed.');}
+      if(target.dataset.action==='fetch'){const product=products.find(p=>p.id===row.dataset.id);if(product)fetchUnverified([product]);}
+    });
+    qs('#product-list').addEventListener('change',e=>{
+      const field=e.target.dataset.field;if(!['price','quantity'].includes(field))return;
+      const row=e.target.closest('[data-id]');if(!row)return;
+      const record=products.find(p=>p.id===row.dataset.id);if(!record)return;
+      record[field]=L.numeric(e.target.value);if(field==='price'){record.priceSource='manual';record.lookupNote='Manual price · verify it on Zepto before checkout.';}store();render();
+    });
+    qs('#export-cart').addEventListener('click',()=>{
+      const ready=products.filter(p=>L.classify(p)==='ready');if(!ready.length)return;
+      const csv=L.exportCSV(ready);const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+      const obj=URL.createObjectURL(blob),link=document.createElement('a');link.href=obj;link.download='cartpilot_prepared_cart.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(obj),1000);
+      notify('Prepared-cart CSV exported. Check live Zepto prices before payment.');
+    });
+    qs('#connect-live').addEventListener('click',connectLive);
+    qs('#fetch-all').addEventListener('click',()=>fetchUnverified());
+    checkLiveStatus();
+    qs('#open-zepto').addEventListener('click',()=>{
+      const ready=products.filter(p=>L.classify(p)==='ready');if(!ready.length){notify('No eligible products. Add or validate products first.');return;}
+      const msg=`${ready.length} eligible product(s) have been automatically selected in CartPilot (NOT added to your actual Zepto cart). Open Zepto to add these items and pay?`;
+      if(!confirm(msg))return;
+      window.open('https://www.zepto.com/','_blank','noopener,noreferrer');
+      notify('Opened Zepto. Add or verify items there and complete payment on Zepto.');
+    });
+  }
+  function setFile(next){file=next||null;put('#selected-file',file?file.name:'No file selected');}
+  setup();
+})();
+
+</script>
+</body>
+</html>
